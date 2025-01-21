@@ -8,29 +8,50 @@ export const useCoffeeListStore = defineStore('coffeeList', () => {
   const isLoading = ref(false)
   const error = ref<Error | null>(null)
 
-  // 게터
   const isPending = computed(() => isLoading.value)
   const isSuccess = computed(
     () => !isLoading.value && !error.value && coffeeList.value.length > 0
   )
   const isFailure = computed(() => !isLoading.value && error.value !== null)
 
-  // 액션
-  async function fetch() {
-    isLoading.value = true
-    error.value = null
-    try {
-      await new Promise((res) => setTimeout(() => res(null), 1500))
+  const mutations = {
+    setCoffeeList: (list: Coffee[]) => {
       coffeeList.value = list
-    } catch (err) {
-      if (err instanceof Error) {
-        error.value = err
-      } else {
-        error.value = new Error('Unknown error occurred')
+    },
+    setLoading: (status: boolean) => {
+      isLoading.value = status
+    },
+    setError: (err: Error | null) => {
+      error.value = err
+    },
+  }
+
+  const actions = {
+    addCoffee: (coffee: Coffee) => {
+      coffeeList.value.push(coffee)
+    },
+    removeCoffee: (coffee: Coffee) => {
+      const idx = coffeeList.value.findIndex((c) => c.name == coffee.name)
+      if (idx !== -1) {
+        coffeeList.value.splice(idx, 1)
       }
-    } finally {
-      isLoading.value = false
-    }
+    },
+    fetch: async () => {
+      if (isSuccess.value) return
+
+      mutations.setLoading(true)
+      mutations.setError(null)
+      try {
+        await new Promise((res) => setTimeout(() => res(null), 1500))
+        mutations.setCoffeeList(list)
+      } catch (err) {
+        mutations.setError(
+          err instanceof Error ? err : new Error('Unknown error occurred')
+        )
+      } finally {
+        mutations.setLoading(false)
+      }
+    },
   }
 
   return {
@@ -38,11 +59,10 @@ export const useCoffeeListStore = defineStore('coffeeList', () => {
     coffeeList,
     isLoading,
     error,
-    // 게터
     isPending,
     isSuccess,
     isFailure,
-    // 액션
-    fetch,
+    ...mutations,
+    ...actions,
   }
 })
