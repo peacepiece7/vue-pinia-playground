@@ -1,25 +1,24 @@
 <template>
-  <div class="cover" tabindex="0">
+  <button class="cover" tabindex="0" @click="addToCart(cup)">
     <div class="cup">
       <div
         class="cup-body"
         v-for="r in cup.recipe"
         :class="r.name"
         :style="{ height: `${r.quantity}%` }"
-        @click="addCoffee(cup)"
       >
         {{ r.name }}
         {{ r.quantity }}%
       </div>
     </div>
     <div class="cup-handle"></div>
-  </div>
+  </button>
 </template>
 <script setup lang="ts">
-import { useCoffeeListStore } from '@/store/coffeeListStore'
+import { useCartStore } from '@/store/cartStore'
 import type { Coffee } from '@/types/coffee'
 defineProps<{ cup: Coffee }>()
-const { addCoffee } = useCoffeeListStore()
+const { addToCart } = useCartStore()
 </script>
 <style scoped lang="css">
 .cover {

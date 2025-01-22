@@ -8,16 +8,23 @@
       <MenuList />
     </template>
   </section>
+  {{ cartStore.cartList() }}
+  <aside v-show="hasCartItems">
+    <Payment />
+  </aside>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { useCoffeeListStore } from '../store/coffeeListStore' // 경로는 실제 위치에 맞게 수정해주세요
+import { computed, onMounted } from 'vue'
 import MenuList from '@/components/MenuList.vue'
+import Payment from '@/components/Payment.vue'
+import { useCoffeeListStore } from '../store/coffeeListStore'
+import { useCartStore } from '@/store/cartStore'
 
 const coffeeListStore = useCoffeeListStore()
+const cartStore = useCartStore()
+const hasCartItems = computed(() => cartStore.cartList().length > 0)
 
-// 에러 처리를 포함한 데이터 fetch
 onMounted(async () => {
   await coffeeListStore.fetch()
 })

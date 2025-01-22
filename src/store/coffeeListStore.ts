@@ -38,7 +38,6 @@ export const useCoffeeListStore = defineStore('coffeeList', () => {
     },
     fetch: async () => {
       if (isSuccess.value) return
-
       mutations.setLoading(true)
       mutations.setError(null)
       try {
