@@ -8,7 +8,6 @@
       <MenuList />
     </template>
   </section>
-  {{ cartStore.cartList() }}
   <aside v-show="hasCartItems">
     <Payment />
   </aside>

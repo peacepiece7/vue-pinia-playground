@@ -9,9 +9,28 @@
         })
       }}
     </div>
-    <ul v-if="isShowDetail">
-      <li v-for="list in cartStore.cartList()">
-        {{ list.name }}
+    <ul v-if="isShowDetail" class="detail" @mouseleave="isShowDetail = false">
+      <li v-for="item in cartStore.cartList()">
+        <div class="d-flex justify-space-between">
+          <div class="pa-5 name">{{ item.name }}</div>
+          <div class="pa-5 price">${{ item.totalPrice }}</div>
+          <div class="pa-5 quantity">x {{ item.quantity }}</div>
+          <div class="pa-5">
+            <v-btn
+              color="success"
+              size="small"
+              class="mr-5"
+              @click="cartStore.addToCart(item)"
+              >+
+            </v-btn>
+            <v-btn
+              color="error"
+              size="small"
+              @click="cartStore.removeCartItem(item)"
+              >-
+            </v-btn>
+          </div>
+        </div>
       </li>
     </ul>
   </div>
@@ -38,5 +57,26 @@ const isShowDetail = ref(false)
 }
 .total {
   font-size: 2rem;
+}
+.detail {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  overflow-y: scroll;
+  bottom: 150px;
+  left: -300px;
+  background-color: beige;
+  border: 2px solid black;
+}
+.name {
+  max-width: 200px;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.price {
+  max-width: 50px;
+  width: 100%;
 }
 </style>
